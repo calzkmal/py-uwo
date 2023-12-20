@@ -66,6 +66,8 @@ class Inventory:
             currentQuantity = self._inventoryData[nameProduct]['quantity']
             if currentQuantity >= removeQuantity:
                 self._inventoryData[nameProduct]['quantity'] -= removeQuantity
+            else:
+                self._inventoryData[nameProduct]['quantity'] = 0
 
     # Get the price of a product from the inventory
     def get_productPrice(self, nameProduct):
@@ -123,6 +125,7 @@ class ShoppingCart:
     def view_cart(self):
         total = 0
 
+        # Loop to display product quantity and processing the total amount 
         for productName, quantity in self._shoppingCart.items():
             price_per_item = self._inventory.get_productPrice(productName)
             total += price_per_item * quantity
@@ -147,6 +150,7 @@ class Catalog:
         medium_prices = set()
         high_prices = set()
 
+        # Categorizing products through for loop
         for product in self._catalogData:
             price = product.get_price()
 
@@ -171,6 +175,7 @@ def populate_inventory(filename):
     try:
         invent = Inventory()
 
+        # Open the file using with open
         with open(filename, 'r') as file:
             for line in file:
                 name, price, quantity, _ = line.strip().split(',')
@@ -178,7 +183,8 @@ def populate_inventory(filename):
 
         return invent
 
-    except FileNotFoundError:
+    # When the file cannot be read
+    except IOError:
         print(f"Could not read file: {filename}")
         return None
 
@@ -187,6 +193,7 @@ def populate_catalog(filename):
     try:
         catalog = Catalog()
 
+        # Open the file using with open
         with open(filename, 'r') as file:
             for line in file:
                 name, price, _, category = line.strip().split(',')
@@ -195,6 +202,7 @@ def populate_catalog(filename):
 
         return catalog
 
-    except FileNotFoundError:
+    # When the file cannot be read
+    except IOError:
         print(f"Could not read file: {filename}")
         return None
